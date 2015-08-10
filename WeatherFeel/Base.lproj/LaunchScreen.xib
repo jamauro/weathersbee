@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launch.png" translatesAutoresizingMaskIntoConstraints="NO" id="Tgh-LB-IDF">
+                    <rect key="frame" x="120" y="180" width="80" height="80"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="Tgh-LB-IDF" secondAttribute="height" multiplier="1:1" id="AMM-Qj-Mup"/>
+                        <constraint firstAttribute="width" secondItem="Tgh-LB-IDF" secondAttribute="height" multiplier="1:1" id="G4V-CC-arc"/>
+                    </constraints>
+                </imageView>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="weathersbee-title.png" translatesAutoresizingMaskIntoConstraints="NO" id="nag-Qn-uw4">
+                    <rect key="frame" x="43" y="280" width="234" height="31"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="nag-Qn-uw4" secondAttribute="height" multiplier="234:31" id="H5x-EE-anS"/>
+                    </constraints>
+                </imageView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="nag-Qn-uw4" firstAttribute="top" secondItem="Tgh-LB-IDF" secondAttribute="bottom" constant="20" id="1P3-qz-hvw"/>
+                <constraint firstAttribute="centerX" secondItem="Tgh-LB-IDF" secondAttribute="centerX" id="3t8-5r-zrz"/>
+                <constraint firstAttribute="centerX" secondItem="nag-Qn-uw4" secondAttribute="centerX" id="A48-9u-J1U"/>
+                <constraint firstAttribute="trailing" secondItem="Tgh-LB-IDF" secondAttribute="trailing" constant="120" id="DpC-a7-91w"/>
+                <constraint firstItem="Tgh-LB-IDF" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="120" id="KsC-bk-eMf"/>
+                <constraint firstAttribute="trailing" secondItem="nag-Qn-uw4" secondAttribute="trailing" constant="43" id="LQo-ec-ACe"/>
+                <constraint firstItem="nag-Qn-uw4" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="43" id="VBM-jx-GB3"/>
+                <constraint firstItem="Tgh-LB-IDF" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="180" id="a5d-51-LiY"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+            <point key="canvasLocation" x="548" y="455"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="launch.png" width="80" height="80"/>
+        <image name="weathersbee-title.png" width="234" height="31"/>
+    </resources>
+</document>
