@@ -11,17 +11,16 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launch.png" translatesAutoresizingMaskIntoConstraints="NO" id="Tgh-LB-IDF">
-                    <rect key="frame" x="120" y="180" width="80" height="80"/>
-                    <constraints>
-                        <constraint firstAttribute="width" secondItem="Tgh-LB-IDF" secondAttribute="height" multiplier="1:1" id="AMM-Qj-Mup"/>
-                        <constraint firstAttribute="width" secondItem="Tgh-LB-IDF" secondAttribute="height" multiplier="1:1" id="G4V-CC-arc"/>
-                    </constraints>
-                </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="weathersbee-title.png" translatesAutoresizingMaskIntoConstraints="NO" id="nag-Qn-uw4">
                     <rect key="frame" x="43" y="280" width="234" height="31"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="nag-Qn-uw4" secondAttribute="height" multiplier="234:31" id="H5x-EE-anS"/>
+                    </constraints>
+                </imageView>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launch.png" translatesAutoresizingMaskIntoConstraints="NO" id="Tgh-LB-IDF">
+                    <rect key="frame" x="120" y="180" width="80" height="80"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="Tgh-LB-IDF" secondAttribute="height" multiplier="1:1" id="G4V-CC-arc"/>
                     </constraints>
                 </imageView>
             </subviews>

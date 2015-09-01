@@ -48,23 +48,26 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
   var icon = ""
   var todaySummary = ""
   var todayPrecipProb: Double!
+  var precipLikely: [String] = []
+  let minPrecipProb = 0.50
   var hourlySummary = ""
   var recommendation = ""
   
   let minUVForNotice: Int = 5
-  let minUVForExtreme: Int = 10
+  let minUVForExtreme: Int = 11
   var maxUVIndex = 0
-  var maxUVTime = ""
+  var maxUVTime = 0
   var lastUVIndexHour: Int = 0
-  var uvByTime = [String: Int]()
+  var uvByTime = [Int: Int]()
   
   var currentDate = NSDate()
   var userCalendar: NSCalendar = NSCalendar.currentCalendar()
-  var comps: NSDateComponents!
+  // var comps: NSDateComponents!
   var currentHour: Int!
   var formatter = NSDateFormatter()
   var uvChecked: NSDate = NSDate(timeIntervalSince1970: 0)
   
+ 
   // Temperature colors
   let scorcherColor = UIColor(hex: 0xFE324A) // or 0xF73C4B or 0xFE3241
   let hotColor = UIColor(hex: 0xFF7033)
@@ -86,8 +89,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
   
   var flick: UIPanGestureRecognizer!
   var longPress: UILongPressGestureRecognizer!
-  var bounceViewCount: Int = 0
+  var bounceViewCount: Int! = 0
   var constraintTemperatureViewHeight: NSLayoutConstraint!
+  
+  var animationFinished: Bool = false
+  var getWeatherFinished: Bool = false
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -116,16 +122,18 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
       constant: round(screenSize.height / 3))
     self.view.addConstraint(constraintTemperatureViewHeight)
     
+    
     // Do any additional setup after loading the view, typically from a nib.
-    animateWink()
+    
+    
     // Get the location data
     locationManager.delegate = self
     locationManager.distanceFilter = 100.0
     locationManager.desiredAccuracy = kCLLocationAccuracyBest
     locationManager.requestWhenInUseAuthorization()
-    // locationManager.startUpdatingLocation()
+    locationManager.startUpdatingLocation()
     
-    
+    animateWink()
 
     
 
@@ -146,10 +154,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
     // print(formatter.stringFromDate(currentDate))
     
     // get the current hour
-    comps = userCalendar.components(.CalendarUnitHour, fromDate: currentDate)
-    currentHour = comps.hour
-    
-    
+    currentHour = currentDate.hour()
+    print(" currentDate initially:  \(currentDate) ")
+    print(" currentHour initially: \(currentHour) ")
   
     flick = UIPanGestureRecognizer(target: self, action: "handleFlick:")
     flick.delegate = self
@@ -166,18 +173,17 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
     // Store the initial bounce view count of 0
     NSUserDefaults.standardUserDefaults().setInteger(bounceViewCount, forKey: "bounceViewCount")
     
+    
+    
   }
   
+  
   func animateWink() {
-    winkView.animationImages = [UIImage(named: "wink.png")!, UIImage(named: "launch.png")!]
     
-    winkView.animationDuration = 0.4
-   
-    winkView.animationRepeatCount = 2
-    
+    winkView.animationImages = [UIImage(named: "launch.png")!, UIImage(named: "wink.png")!]
+    winkView.animationDuration = 0.6
+    winkView.animationRepeatCount = 1
     winkView.startAnimating()
-    
-    //locationManager.startUpdatingLocation()
     
     UIView.animateWithDuration(0.4, delay: 1.0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
       //self.winkView.stopAnimating()
@@ -197,22 +203,31 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
       
       
     }) { (complete) -> Void in
+      self.animationFinished = true
+      print(" animationFinished is: \(self.animationFinished) ")
       self.weathersbeeTitle.hidden = true
-      self.locationManager.startUpdatingLocation()
+      //self.locationManager.startUpdatingLocation()
       
       // Prevent italic display font from being cut off
-      
-      if self.realFeelLabel.text == "" {
+      // if self.realFeelLabel.text == ""
+      if self.getWeatherFinished == false {
         var initialString = "Fetching those weather bits..." //
         // self.displayFont = UIFont(name: "PlayfairDisplay-Italic", size: 36)!
         // self.attributes = [NSFontAttributeName: self.displayFont, NSForegroundColorAttributeName: self.realFeelLabelColor]
         self.realFeelLabel.attributedText = NSMutableAttributedString(string: initialString as String, attributes: self.attributes as [NSObject : AnyObject])
+        
+        self.summaryLabel.text = "One moment please..."
+      } else {
+        self.displayWeatherData()
       }
       
+      /*
       if self.summaryLabel.text == "" {
         self.summaryLabel.text = "One moment please..."
       }
+      */
       
+      print(" temperature view after wink position is: \(self.temperatureView.frame) ")
       self.temperatureView.hidden = false
       self.ambientTempLabel.hidden = false
       self.hiTempLabel.hidden = false
@@ -235,7 +250,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
   
   override func viewDidAppear(animated: Bool) {
     
-    
+    //animateWink()
     /*
     
     winkView.animationImages = [UIImage(named: "launch.png")!, UIImage(named: "wink.png")!, UIImage(named: "launch.png")!]
@@ -277,9 +292,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
   // swift 2 can have notification: NSNotification? = nil
   // this func will be called initially and any time app enters foreground
   func refreshData(notification: NSNotification?) {
+    
     // get the current hour
-    comps = userCalendar.components(.CalendarUnitHour, fromDate: currentDate)
-    currentHour = comps.hour
+    currentDate = NSDate()
+    currentHour = currentDate.hour()
+    print(" currentDate in refreshData is \(currentDate) ")
+    print(" currentHour in refreshData is: \(currentHour) ")
     
     locationManager.startUpdatingLocation()
   }
@@ -291,7 +309,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
     
     var userLocation: CLLocation = locations[0] as! CLLocation
     print(" got location ")
-    // if (userLocation.horizontalAccuracy > 0) {
+    if (userLocation.horizontalAccuracy > 0) {
       locationManager.stopUpdatingLocation()
 
       // get pressure via forecast API
@@ -324,23 +342,23 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
 
       } else {
         print(" new location is close to previous ")
+        // update UV label
+        if !uvByTime.isEmpty {
+          print(" updating the UV for \(currentHour) ")
+          uvIndexLabel.text = "\(uvByTime[currentHour]!)"
+        }
+
       }
       
       previousLocation = userLocation
       
-      // update UV label
-      if !uvByTime.isEmpty {
-        print(" setting the UV ")
-        uvIndexLabel.text = "\(uvByTime[format12H(currentHour)]!)"
-      }
-      
-    //}
+    }
     
     
   }
   
   func bounceView() {
-    UIView.animateWithDuration(0.2, delay: 2.0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
+    UIView.animateWithDuration(0.2, delay: 1.0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
       
       self.temperatureView.transform = CGAffineTransformMakeTranslation(0, -20)
       
@@ -355,7 +373,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
             
             // print("bottom view moved up")
         }
-
+        
+        // Increment and store the bounce view count
+        self.bounceViewCount!++
+        print( " bounce view count in bounceView is: \(self.bounceViewCount) ")
+        NSUserDefaults.standardUserDefaults().setInteger(self.bounceViewCount, forKey: "bounceViewCount")
     }
     
     
@@ -399,7 +421,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
     print(" i was long pressed ")
     
     let image = takeScreenShot()
-    let textToShare: String = "via weathersbee. Download here: "
+    let textToShare: String = "via weathersbee. Get the app here: http://apple.co/1JHjKMf"
     
     let objectsToShare = [image, textToShare]
     let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
@@ -430,6 +452,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
     
     print(" getWeather called with lat \(latitude) and lon \(longitude) ")
     
+    var precipProbByTime = [NSDate: Double]()
     
     let forecastID = valueForAPIKey(keyname: "API_CLIENT_ID")
     
@@ -444,7 +467,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
         
         let jsonResult = NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers, error: nil) as! NSDictionary
         
-        // print(jsonResult)
+        // print(" forecast result: \(jsonResult) ")
         
         if let currentConditions = jsonResult["currently"] as? NSDictionary {
           self.realFeelTemp = Int(round(currentConditions["apparentTemperature"] as! Double))
@@ -460,6 +483,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
         let dailyData = jsonResult["daily"]!["data"]! as! NSArray
         let hourly = jsonResult["hourly"] as! NSDictionary
         
+        
         self.todaySummary = dailyData[0]["summary"] as! String
         self.hiTemp = Int(round(dailyData[0]["temperatureMax"] as! Double))
         self.lowTemp = Int(round(dailyData[0]["temperatureMin"] as! Double))
@@ -469,6 +493,26 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
         
         self.hourlySummary = hourly["summary"] as! String
         
+        let hourlyData = jsonResult["hourly"]!["data"]! as! NSArray
+        
+        for data in hourlyData {
+          let time: NSDate = NSDate(timeIntervalSince1970: data["time"] as! NSTimeInterval)
+          let hourlyPrecipProb: Double = data["precipProbability"] as! Double
+          if self.userCalendar.isDateInToday(time) {
+            precipProbByTime[time] = hourlyPrecipProb
+          }
+          if self.userCalendar.isDateInToday(time) && hourlyPrecipProb > self.minPrecipProb {
+            let precipHour: String = self.format12H(time.hour())
+            self.precipLikely.append(precipHour)
+          }
+        }
+        
+        
+        print(" precip by time is: \(precipProbByTime) ")
+        print( "nonsorted precip likely is: \(self.precipLikely) ")
+ 
+        
+        self.getWeatherFinished = true
         print(" today summary: \(self.todaySummary)")
         print(" hourly summary: \(self.hourlySummary)")
         
@@ -498,9 +542,15 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
           
         }
         */
+
         
+        if self.animationFinished == true {
+          self.displayWeatherData()
+        }
         
+        /*
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
+        
           self.getRealFeel(self.humidity, windSpeed: self.windSpeed, precipProb: self.todayPrecipProb)
           self.realFeelTempLabel.text = "\(self.realFeelTemp)º"
           if self.icon == "" {
@@ -525,7 +575,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
           
           
         })
-        
+        */
         
         
       } else {
@@ -577,17 +627,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
     
     task.resume()
     
-    // Read from stored bounce count
-    bounceViewCount = NSUserDefaults.standardUserDefaults().objectForKey("bounceViewCount") as! Int
-    if bounceViewCount < 2 {
-      bounceView()
-      bounceViewCount++
-      // Store the bounce view count
-      NSUserDefaults.standardUserDefaults().setInteger(bounceViewCount, forKey: "bounceViewCount")
-    }
-    
-    print(" bounce view count is: \(bounceViewCount) ")
-    
     /*
     if postalCode != nil {
       getUVIndex(postalCode)
@@ -595,6 +634,49 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
     */
     
 
+  }
+  
+  
+  func displayWeatherData() {
+    print(" **displayWeatherData called** ")
+    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+      
+      self.getRealFeel(self.humidity, windSpeed: self.windSpeed, precipProb: self.todayPrecipProb, precipLikely: self.precipLikely)
+      self.realFeelTempLabel.text = "\(self.realFeelTemp)º"
+      if self.icon == "" {
+        self.currentWeatherIcon.image = UIImage(named: "partly-cloudy-day")
+      } else {
+        self.currentWeatherIcon.image = UIImage(named: self.icon)
+      }
+      
+      self.ambientTempLabel.text = "\(self.ambientTemp)º"
+      self.hiTempLabel.text = "\(self.hiTemp)º"
+      self.lowTempLabel.text = "\(self.lowTemp)º"
+      self.windLabel.text = "\(self.windSpeed) mph  \(self.windDirection)"
+      self.humidityLabel.text = "\(self.humidity)%"
+      // Stop the spinner in the status bar
+      UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+      UIView.animateWithDuration(0.2, delay: 0.0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
+        self.winkView.hidden = true
+        //self.winkView.transform = CGAffineTransformMakeScale(0.05, 0.05)
+        }, completion: { (complete) -> Void in
+          //self.winkView.hidden = true
+      })
+      
+      // Read from stored bounce count
+      // if let bounces: Int = NSUserDefaults.standardUserDefaults().objectForKey("bounceViewCount") as? Int {
+      
+      //}
+      
+      print(" bounce view count is: \(self.bounceViewCount) ")
+    
+      if NSUserDefaults.standardUserDefaults().integerForKey("bounceViewCount") < 1 {
+        self.bounceView()
+      }
+      
+      
+      
+    })
   }
   
   func getWindDirection(bearing: Int) -> String {
@@ -609,12 +691,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
     return dir
   }
   
-  func getRealFeel(humidity: Int, windSpeed: Int, precipProb: Double) {
+  func getRealFeel(humidity: Int, windSpeed: Int, precipProb: Double, precipLikely: Array<String>? = []) {
     
     var uvIndex = 5
     var temp: String!
     var humidityFeel: String!
     var wind: String!
+    var timeOfDay: String!
     
     switch realFeelTemp {
     case 100...200:
@@ -665,14 +748,16 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
       temp = "default"
     }
     
+    
+    
     switch humidity {
     case 0...30:
       humidityFeel = "dry"
     case 31...60:
       humidityFeel = "comfortable"
-    case 61...79:
+    case 61...74:
       humidityFeel = "sticky"
-    case 80...100:
+    case 75...100: //originally 80
       humidityFeel = "wet"
     default:
       humidityFeel = "default"
@@ -693,124 +778,140 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
       wind = "default"
     }
     
+    switch currentHour {
+    case 00...11:
+      timeOfDay = "morning"
+    case 12...17:
+      timeOfDay = "afternoon"
+    case 18...24:
+      timeOfDay = "evening"
+    default:
+      timeOfDay = "default"
+    }
     
     if temp == "scorcher" {
       if humidityFeel == "sticky" {
         if wind == "calm" || wind == "light" {
-          realFeel = "It's African hot, find A/C stat"
+          realFeel = "It’s African hot, find A/C stat"
         }
       } else if humidityFeel == "wet" {
-        realFeel = "It's middle-of-the jungle hot, stay indoors"
+        realFeel = "It’s middle-of-the jungle hot, stay indoors"
       } else if humidityFeel == "dry" {
-        realFeel = "It's oven-esque, find a cool shelter"
+        realFeel = "It’s oven-esque, find a cool shelter"
       } else {
-        realFeel = "It's a scorcher, grab a cold lemonade"
+        realFeel = "It’s a scorcher, grab a cold lemonade" // Ideal for bikram yoga, a.k.a gross
       }
       
     } else if temp == "hot" {
       if humidityFeel == "sticky" {
         if wind == "calm" || wind == "light" {
-          realFeel = "It's sweltering, find A/C stat"
+          realFeel = "It’s sweltering, find A/C stat" // BIRDLE
         } else {
-          realFeel = "It's sultry with a sticky breeze"
+          realFeel = "It’s sultry with a sticky breeze"
         }
       } else if humidityFeel == "wet" {
-        realFeel = "It's like a sauna, find A/C"
+        realFeel = "It’s like a sauna, find A/C"
       } else if humidityFeel == "dry" {
-        realFeel = "Not too bad in the shade, wear flip flops"
+        realFeel = "Not too bad in the shade, wear flip flops" // BIRDLE // perfect if you were a cactus
       } else {
-        realFeel = "It's super hot, wear wicking clothing"
+        realFeel = "It’s stifling, break out the slip ’n slide" // BIRDLE // like sitting in a hot car without A/C
       }
       
     } else if temp == "warm" {
       if humidityFeel == "wet" {
-        realFeel = "Doesn't get much steamier than this"
+        realFeel = "Doesn’t get much steamier than this"
       } else if humidityFeel == "sticky" {
-        realFeel = "The air's warm and thick, wear shorts"
+        realFeel = "The air’s warm & thick, wear your linens" // BIRDLE // It's like a fresh cinna-bun, warm & sticky
         if wind == "breezy" {
-          realFeel = "The air's warm and thick but it's breezy"
+          realFeel = "The air’s warm and thick but it’s breezy" // BIRDLE
         }
       } else if humidityFeel == "dry" {
-        realFeel = "It's nice in the shade, wear flip flops"
+        realFeel = "It’s nice in the shade, wear flip flops"
       } else {
-        realFeel = "Sure is warm, great time to jump in a pool"
+        realFeel = "Sure is a warm one, find a waterin’ hole" // BIRDLE // Sure is warm, great time to jump in a pool //  It's like spring break in Mexico
       }
       
     } else if temp == "perfect" {
       if humidityFeel == "wet" {
-        if wind == "light" || wind == "breezy" {
-          realFeel = "It's a bit humid but nice with the breeze"
+        if wind == "breezy" {
+          realFeel = "It’s sticky but there’s a breeze" // BIRDLE
         } else {
-          realFeel = "It's like pea soup"
+          realFeel = "It’s like lukewarm pea soup"
         }
       } else if humidityFeel == "sticky" {
-        realFeel = "Nearly perfect, just a touch humid"
+        realFeel = "Nearly ideal, just a touch muggy" // BIRDLE
       } else {
-        realFeel = "Make time to play outside, it's perfect"
+        if timeOfDay == "evening" {
+          realFeel = "Lovely for an evening stroll, it’s perfect"
+        } else {
+          realFeel = "Make time to play outside, it’s perfect"
+        }
       }
       
     } else if temp == "nice" {
-      if humidityFeel == "sticky" || humidityFeel == "wet" {
+      if humidityFeel == "wet" {
         if wind != "calm" && wind != "light" {
-          realFeel = "It's like a chilled pea soup with the breeze, wear a windbreaker"
+          realFeel = "It’s like chilled pea soup"
         } else {
-          realFeel = "It's like pea soup"
+          realFeel = "It’s like pea soup"
         }
+      } else if humidityFeel == "sticky" {
+        realFeel = "Nearly ideal, just a touch muggy" // BIRDLE
       } else {
-        realFeel = "Make time to play outside, it's perfect"
+        realFeel = "Make time to play outside, it’s perfect"
       }
       
     } else if temp == "cool" {
       if humidityFeel == "dry" || humidityFeel == "comfortable" {
         if wind == "calm" || wind == "light" {
-          realFeel = "It's crisp, put on a long-sleeve shirt"
+          realFeel = "It’s crisp, put on a long-sleeve shirt" // BIRDLE
         } else {
-          realFeel = "It's brisk, put on a sweatshirt"
+          realFeel = "It’s brisk, put on a sweatshirt" // BIRDLE
         }
       } else if humidityFeel == "sticky" {
         if wind == "calm" || wind == "light" {
-          realFeel = "It's cool out there, wear a hoodie"
+          realFeel = "It’s cool out, wear a hoodie" // BIRDLE
         } else {
-          realFeel = "It's cool and breezy, wear a light jacket"
+          realFeel = "It’s cool and breezy, wear a light jacket" // BIRDLE
         }
       } else if humidityFeel == "wet" {
-        realFeel = "It's damp, wear a light jacket"
+        realFeel = "It’s like a San Fran summer, damp & chilly" // It's damp with a slight chill, wear a light jacket
       }
       
     } else if temp == "chilly" {
       if humidityFeel == "wet" {
         if wind != "calm" && wind != "light" {
-          realFeel = "It's chilly and breezy, wear a windbreaker"
+          realFeel = "It’s miserably cold, wear a windbreaker" // , wear a windbreaker
         } else {
-          realFeel = "It's chilly and pea-soupy, wear a rain jacket"
+          realFeel = "It’s chilly and soggy, wear a rain jacket" // wear a rain jacket"
         }
       } else {
-        realFeel = "It's chilly, wear a sweater"
+        realFeel = "It’s chilly, break out the sweater" // BIRDLE
       }
       
     } else if temp == "cold" {
       if wind != "calm" && wind != "light" {
-        realFeel = "It's bone chilling and windy, wear a thick coat"
+        realFeel = "It’s bone chillingly cold, wear a thick coat" // BIRDLE
       } else {
-        realFeel = "It's cold, wear a coat"
+        realFeel = "It’s cold, wear your best chinchilla"
       }
       
     } else if temp == "freezing" {
       if (humidityFeel != "dry" && humidityFeel != "comfortable") && (wind != "calm" && wind != "light") {
-        realFeel = "It's bone chilling, layer up"
+        realFeel = "It’s bone chilling, layer up"
       } else {
-        realFeel = "It's freezing, wear a heavy coat"
+        realFeel = "It’s literally freezing, wear a heavy coat" // BIRDLE
       }
       
     } else if temp == "bitterlycold" {
       if wind != "calm" && wind != "light" {
-        realFeel = "It's bitterly cold, wear a heavy coat and beanie"
+        realFeel = "It’s bitterly cold, wear a beanie" // BIRDLE // It's colder than a Norwegian well digger's pinky toe // It’s bitterly, wish I lived in Florida cold // wear a heavy coat and beanie
       } else {
-        realFeel = "It's like walking in a cold wind tunnel, wear your heaviest coat"
+        realFeel = "It’s like a wind tunnel in Canada, eh" // , wear your heaviest coat
       }
       
     } else if temp == "subzero" {
-      realFeel = "Yikes, stay indoors to avoid frostbite"
+      realFeel = "Yikes, stay indoors to avoid frostbite" // So this is what Antartica feels like, huh.
     }
   
     
@@ -823,25 +924,29 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
     //realFeelLabel.text = realFeel
     realFeelLabel.attributedText = attributedRealFeel
     
-    setSummary(self.todayPrecipProb, uvIndex: maxUVIndex)
+    setSummary(self.todayPrecipProb, uvIndex: maxUVIndex, temp: temp, wind: wind)
     
     // set the colors for the icons
-    setColor(temp)
+    setIconColor(temp)
     
-    print("\(temp), \(humidityFeel), and \(wind)")
+    print(" \(temp), \(humidityFeel), and \(wind) in the \(timeOfDay) ")
 
   }
   
-  func setColor(temp: String) {
+  func setIconColor(temp: String) {
     windIcon.image = UIImage(named: "wind-icon-\(temp)")
     humidityIcon.image = UIImage(named: "humidity-icon-\(temp)")
     uvIcon.image = UIImage(named: "uv-icon-\(temp)")
   }
   
-  func setSummary(precipProb: Double?, uvIndex: Int?) {
+  // TODO: figure out better way to handle wear recs
+  func setSummary(precipProb: Double?, uvIndex: Int?, temp: String? = nil, wind: String? = nil) {
    
     var summary = ""
+    print(" **setting summary** ")
     print(" current hour is: \(currentHour) ")
+    print(" lastUVIndexHour is: \(lastUVIndexHour) ")
+    print(" precipProb is: \(precipProb) ")
     
     // switch to hourly summary at 12pm
     if currentHour < 12 {
@@ -850,14 +955,18 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
       summary = hourlySummary
     }
     
-    if precipProb > 0.79 {
-      print(" precipProb is: \(precipProb) ")
+    // if precipProb > minPrecipProb
+    if !precipLikely.isEmpty {
       let grabUmbrella = "Grab an umbrella. "
-      provideRecommendation(grabUmbrella, summary: summary)
-    } else if maxUVIndex >= minUVForNotice && currentHour < lastUVIndexHour {
+      // let precipHours = join(", ", precipLikely)
+      // summary = "Rain's likely for the \(precipHours) hour. " + summary
+      provideRecommendation(grabUmbrella, summary: summary, color: chillyColor)
+    } else if (temp == "nice" || temp == "chilly") && (wind == "breezy" || wind == "blustery") {
+      provideRecommendation("Wear a windbreaker. ", summary: summary)
+    } else if maxUVIndex >= minUVForNotice && currentHour < (lastUVIndexHour + 1){
       print(" getting uvIndexNotice ")
-      let uvRecommendation = uvIndexNotice(uvByTime)
-      provideRecommendation(uvRecommendation, summary: summary)
+      let uvNotice = uvIndexNotice(uvByTime)
+      provideRecommendation(uvNotice.recommendation, summary: summary, color: uvNotice.color)
     } else {
       summaryLabel.text = summary
     }
@@ -885,18 +994,18 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
           
           let jsonResult = NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers, error: nil) as! NSArray
           
-          print(" uv index json: \(jsonResult)")
+          // print(" uv index json: \(jsonResult)")
           
           
           for data in jsonResult {
             
             let time = data["DATE_TIME"] as! String
-            let formattedTime = self.formatTime(time)
+            let formattedTime = self.formatMilitaryTime(self.formatTime(time))
             let uvIndex = data["UV_VALUE"] as! Int
             self.uvByTime[formattedTime] = uvIndex
             
           }
-          
+          print(" uvByTime: \(self.uvByTime) ")
           
           for (time, uvIndex) in self.uvByTime {
             if uvIndex > self.maxUVIndex {
@@ -905,8 +1014,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
             }
             // get the last hour where the UV index is over the min threshold
             if uvIndex >= self.minUVForNotice {
-              if self.formatMilitaryTime(time) > self.lastUVIndexHour {
-                self.lastUVIndexHour = self.formatMilitaryTime(time)
+              if time > self.lastUVIndexHour {
+                self.lastUVIndexHour = time
               }
             }
           }
@@ -935,14 +1044,17 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
           
           */
           dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            self.uvIndexLabel.text = "\(self.uvByTime[self.format12H(self.currentHour)]!)"
-            self.setSummary(self.todayPrecipProb, uvIndex: self.maxUVIndex)
-          
+            if !self.uvByTime.isEmpty {
+              self.uvIndexLabel.text = "\(self.uvByTime[self.currentHour]!)"
+            }
+            if self.animationFinished {
+              self.setSummary(self.todayPrecipProb, uvIndex: self.maxUVIndex)
+            }
           })
 
         } else {
           // something went wrong with API call to forecast
-          print(error)
+          print(" forecast error: \(error) ")
         }
       }
       
@@ -954,12 +1066,56 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
     
   }
   
-  func uvIndexNotice(uvByTime: Dictionary<String, Int>) -> String {
+  func uvIndexNotice(uvByTime: Dictionary<Int, Int>) -> (recommendation: String, color: UIColor) {
     
+    print(" **uvIndexNotice called** ")
+    
+    var uvTimes: [Int] = []
+    var uvValues: [Int] = []
     var uvTimesSunburn: [String] = []
     var uvTimesExtreme: [String] = []
     var uvRecommendation = ""
+    var colorRecommendation: UIColor
     
+    // sort the uvByTime into separate k, v arrays
+    for (k, v) in Array(uvByTime).sorted({$0.0 < $1.0}) {
+      // print("\(k): \(v)")
+      uvTimes.append(k)
+      uvValues.append(v)
+    }
+    
+    let sorteduvByTime = Array(uvByTime).sorted({$0.0 < $1.0})
+    
+    print(" uvByTime: \(uvByTime) ")
+    print(" sorteduvByTime: \(sorteduvByTime) ")
+    
+    for index in 1..<uvValues.count {
+      // print(Int(round((Double(uvValues[index]) + Double(uvValues[index-1]))/2.0)))
+      // if Int(round((Double(uvValues[index]) + Double(uvValues[index-1]))/2.0)) >= minUVForExtreme || uvValues[index] >= minUVForExtreme
+      if uvValues[index] >= minUVForExtreme || uvValues[index-1] >= minUVForExtreme {
+        uvTimesExtreme.append(format12H(uvTimes[index]))
+      } else if uvValues[index] >= minUVForNotice || uvValues[index-1] >= minUVForNotice {
+        uvTimesSunburn.append(format12H(uvTimes[index]))
+      }
+    }
+    
+    print(" uvTimesExtreme: \(uvTimesExtreme) ")
+    print(" uvTimesSunburn: \(uvTimesSunburn) ")
+    
+    if !uvTimesExtreme.isEmpty && currentHour < formatMilitaryTime(uvTimesExtreme.last!) {
+      colorRecommendation = scorcherColor
+      if uvTimesExtreme.count == 1 {
+        uvRecommendation = "Avoid the sun for the \(uvTimesExtreme.first!) hour. "
+      } else {
+        uvRecommendation = "Avoid the sun between \(uvTimesExtreme.first!) - \(uvTimesExtreme.last!). "
+      }
+    } else {
+      // else if currentHour < formatMilitaryTime(sortedUVTimesSunburn.last!)
+      colorRecommendation = hotColor
+      uvRecommendation = "Use sunscreen from \(uvTimesSunburn.first!) - \(uvTimesSunburn.last!). "
+    }
+
+    /*
     for (time, uvIndex) in uvByTime {
       // var shortTime = formatTime(time)
       if uvIndex >= minUVForNotice && uvIndex < minUVForExtreme {
@@ -973,43 +1129,39 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIGestureReco
     print(" uvTimesExtreme sorted: \(sortedUVTimesExtreme)" )
     let sortedUVTimesSunburn = sorted(uvTimesSunburn)
     print(" uvTimesSunburn sorted: \(sortedUVTimesSunburn)" )
+
     
     if !uvTimesExtreme.isEmpty && currentHour < formatMilitaryTime(sortedUVTimesExtreme.last!) {
+      colorRecommendation = scorcherColor
+      if uvTimesExtreme.count == 1 {
+        uvRecommendation = "Avoid the sun for the \(sortedUVTimesExtreme.first!) hour. "
+      } else {
       uvRecommendation = "Avoid the sun between \(sortedUVTimesExtreme.first!) - \(sortedUVTimesExtreme.last!). "
+      }
     } else {
       // else if currentHour < formatMilitaryTime(sortedUVTimesSunburn.last!)
+      colorRecommendation = hotColor
       uvRecommendation = "Use sunscreen from \(sortedUVTimesSunburn.first!) - \(sortedUVTimesSunburn.last!). "
     }
-    
-    /*
-    
-    if uvTimesExtreme.count > 0 {
-      uvRecommendation = "Avoid the sun between \(uvTimesExtreme.first!) - \(uvTimesExtreme.last!). "
-      /*
-      summary = "Avoid the sun between \(uvTimesExtreme.first!) - \(uvTimesExtreme.last!). " + summary
-      print("Avoid the sun between \(uvTimesExtreme.first!) - \(uvTimesExtreme.last!). " + summary)
-      */
-    } else if uvTimesSunburn.count > 0 {
-      uvRecommendation = "Put on sunscreen between \(uvTimesSunburn.first!) - \(uvTimesSunburn.last!). "
-      
-      /*
-      summary = "Put on sunscreen between \(uvTimesSunburn.first!) - \(uvTimesSunburn.last!). " + summary
-      print("Put on sunscreen between \(uvTimesSunburn.first!) - \(uvTimesSunburn.last!). " + summary)
-      */
-    }
-    
     */
-    return uvRecommendation
+    
+    return (uvRecommendation, colorRecommendation)
     
   }
   
-  func provideRecommendation(recommendation: String, summary: String) {
+  func provideRecommendation(recommendation: String, summary: String, var color: UIColor? = nil) {
     print(" *providing a recommendation* ")
     
     var recommendationAndSummary = recommendation + summary
     var attributedSummary = NSMutableAttributedString(string: summary)
     var styledRecommendationandSummary = NSMutableAttributedString(string: recommendationAndSummary)
-    styledRecommendationandSummary.addAttribute(NSForegroundColorAttributeName, value: temperatureView.backgroundColor!, range: NSRange(location: 0, length: count(recommendation)))
+    
+    // set color to background color if not provided explicitly
+    if color == nil {
+      color = temperatureView.backgroundColor
+    }
+    
+    styledRecommendationandSummary.addAttribute(NSForegroundColorAttributeName, value: color!, range: NSRange(location: 0, length: count(recommendation)))
     
     dispatch_async(dispatch_get_main_queue(), { () -> Void in
       self.summaryLabel.attributedText = styledRecommendationandSummary

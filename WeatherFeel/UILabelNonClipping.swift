@@ -10,7 +10,7 @@ import UIKit
 
 class UILabelNonClipping: UILabel {
   
-  let gutter: CGFloat = 4.0
+  let gutter: CGFloat = 6.0
  
   
   /*
