@@ -42,6 +42,6 @@
     </objects>
     <resources>
         <image name="launch.png" width="80" height="80"/>
-        <image name="weathersbee-title.png" width="234" height="31"/>
+        <image name="weathersbee-title.png" width="235" height="30"/>
     </resources>
 </document>

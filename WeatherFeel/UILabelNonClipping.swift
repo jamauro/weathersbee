@@ -29,7 +29,7 @@ class UILabelNonClipping: UILabel {
     var newRect = rect
     newRect.origin.x = rect.origin.x + gutter
     newRect.size.width = rect.size.width - 2 * gutter
-    self.attributedText.drawInRect(newRect)
+    self.attributedText!.drawInRect(newRect)
   }
   
   override func alignmentRectInsets() -> UIEdgeInsets {
