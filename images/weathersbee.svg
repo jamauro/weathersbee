@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.4 (15575) - http://www.bohemiancoding.com/sketch -->
+    <title>launch copy 2@1x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path id="path-1" d="M20.3999996,0 C13.75,0 11.625,-4.66827998e-09 8.625,1 C5.09000015,2.25 2.25,5.09000015 1,8.625 C0,11.625 0,13.75 0,20.3999996 C0,20.3999996 3.71396602e-08,39.5999985 0,39.5999985 C3.71396602e-08,46.25 2.97998177e-08,48.375 1,51.375 C2.25231934,54.9099998 5.09000015,57.75 8.625,59 C11.625,60 13.75,60 20.3999996,60 L39.5999985,60 C46.25,60 48.375,60 51.375,59 C54.9099998,57.75 57.75,54.9099998 59,51.375 C60,48.375 60,46.25 60,39.5999985 L60,20.3999996 C60,13.75 60,11.625 59,8.625 C57.75,5.125 54.8699989,2.25 51.3699989,1 C48.3699989,2.80145684e-09 46.25,1.05532507e-08 39.5999985,0 C43.0999985,1.05532507e-08 20.3999996,0 20.3999996,0 Z"></path>
+        <circle id="path-3" cx="3" cy="3" r="3"></circle>
+        <circle id="path-4" cx="24" cy="3" r="3"></circle>
+        <rect id="path-5" x="0" y="40" width="60" height="20"></rect>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="Desktop" sketch:type="MSArtboardGroup" transform="translate(-572.000000, -451.000000)">
+            <g id="Button-v2" sketch:type="MSLayerGroup" transform="translate(556.000000, 437.000000)">
+                <g id="launch-copy-2" transform="translate(16.000000, 14.000000)">
+                    <mask id="mask-2" sketch:name="Mask" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <g id="Mask">
+                        <use fill="none" sketch:type="MSShapeGroup" xlink:href="#path-1"></use>
+                        <use fill="none" xlink:href="#path-1"></use>
+                        <use fill="none" xlink:href="#path-1"></use>
+                        <use fill="none" xlink:href="#path-1"></use>
+                        <use fill="none" xlink:href="#path-1"></use>
+                        <use fill="none" xlink:href="#path-1"></use>
+                        <use fill="none" xlink:href="#path-1"></use>
+                        <use fill="none" xlink:href="#path-1"></use>
+                        <use fill="#26AFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                    </g>
+                    <g id="Eyes" mask="url(#mask-2)">
+                        <g transform="translate(16.500000, 20.000000)">
+                            <g id="Oval-24119">
+                                <use fill="none" sketch:type="MSShapeGroup" xlink:href="#path-3"></use>
+                                <use fill-opacity="0.370000005" fill="#000000" fill-rule="evenodd" xlink:href="#path-3"></use>
+                            </g>
+                            <g id="Oval-24119-Copy">
+                                <use fill="none" sketch:type="MSShapeGroup" xlink:href="#path-4"></use>
+                                <use fill-opacity="0.370000005" fill="#000000" fill-rule="evenodd" xlink:href="#path-4"></use>
+                            </g>
+                        </g>
+                    </g>
+                    <g id="Rectangle-254">
+                        <use fill="none" sketch:type="MSShapeGroup" mask="url(#mask-2)" xlink:href="#path-5"></use>
+                        <use fill="none" xlink:href="#path-5"></use>
+                        <use fill="none" xlink:href="#path-5"></use>
+                        <use fill="none" xlink:href="#path-5"></use>
+                        <use fill="none" xlink:href="#path-5"></use>
+                        <use fill="#FFF126" fill-rule="evenodd" xlink:href="#path-5"></use>
+                        <use fill="none" xlink:href="#path-5"></use>
+                        <use fill="none" xlink:href="#path-5"></use>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

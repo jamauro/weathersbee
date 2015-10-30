@@ -1,1 +1,107 @@
-My Page
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>Weathersbee</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href='https://fonts.googleapis.com/css?family=Playfair+Display:400italic' rel='stylesheet' type='text/css'>
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+  <link rel="stylesheet" href="css/flickity.css">
+  <link rel="stylesheet" href="css/animate.min.css">
+  <link rel="stylesheet" href="css/custom.css">
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="images/favicon.ico">
+
+  <!-- GA
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <!-- insert GA script -->
+</head>
+<body>
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <div class="container">
+    <section class="logo">
+      <div class="row">
+        <div class="four columns offset-by-two columns">
+          <div id="smallphone" class="animated slideLeft">
+            <img src="images/small-phone.svg" class="animated fadeIn" />
+          </div>
+          <div id="bigphone">
+            <div class="animated slideInRight">
+              <img src="images/big-phone.svg" />
+              <video autoplay width="220" height="390" poster="/images/white.png" >
+                  <source src="video/video.mov" type="video/mp4" />
+              </video>
+              <div class="white"></div>
+              <div class="gallery js-flickity animated fadeIn" data-flickity-options='{ "cellAlign": "left", "contain": true, "prevNextButtons": false, "autoPlay": 4500, "selectedAttraction": 0.07, "friction": 0.4 }'>
+                <div class="gallery-cell">
+                  <img src="images/screen1.png" />
+                </div>
+                <div class="gallery-cell">
+                  <img src="images/screen2.png" />
+                </div>
+                <div class="gallery-cell">
+                  <img src="images/screen3.png" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="four columns offset-by-one column">
+          <div class="info">
+            <div class="name animated fadeInUp">
+              <h3>weathersbee</h3>
+              <p>weather with personality <span class="ampersand">&amp;</span> smarts</p>
+            </div>
+            <a class="button button-primary animated fadeInDown" href="#">
+              <span class="weathersbee">
+
+                  <img id="f4" src="images/blink.png"></img>
+
+                  <img id="f1" src="images/weathersbee.png"></img>
+              </span>
+              <span class="download">Download</span>
+              <span class="store">on the App Store</span>
+            </a>
+          </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <footer>
+    <div class="bottom">
+      <a href="http://twitter.com/getweathersbee">@getweathersbee</a>
+      <p class="copyright">©weathersbee. Designed &amp; developed by <a href="http://twitter.com/johnamauro">@johnamauro</a></p>
+    </div>
+  </footer>
+
+  <!-- JS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <script src="js/flickity.pkgd.min.js"></script>
+
+
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+</body>
+</html>
+
+

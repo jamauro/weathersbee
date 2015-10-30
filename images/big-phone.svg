@@ -1,0 +1,21 @@
+<svg width="260px" height="540px" viewBox="0 0 260 540" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+              <!-- Generator: Sketch 3.4 (15575) - http://www.bohemiancoding.com/sketch -->
+              <title>big-phone</title>
+              <desc>Created with Sketch.</desc>
+              <defs></defs>
+              <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+                  <g id="Desktop" sketch:type="MSArtboardGroup" transform="translate(-207.000000, -196.000000)">
+                      <g id="big-phone" sketch:type="MSLayerGroup" transform="translate(207.000000, 196.000000)">
+                          <path d="M260,500.44586 C260,522.200637 242.202381,540 220.449735,540 L42.3015873,540 C20.5489418,540 2.75132275,522.200637 2.75132275,500.44586 L2.75132275,42.3057325 C2.75132275,20.5509554 20.5489418,2.75159236 42.3015873,2.75159236 L220.449735,2.75159236 C242.202381,2.75159236 260,20.5509554 260,42.3057325 L260,500.44586 L260,500.44586 Z" id="Shape" fill="#F2F2F2" sketch:type="MSShapeGroup"></path>
+                          <rect id="Rectangle-path" fill="#FFFFFF" sketch:type="MSShapeGroup" x="21.3227513" y="76.0127389" width="220.10582" height="390.726115"></rect>
+                          <path d="M131.375661,523.66242 C118.575132,523.66242 108.161376,513.247643 108.161376,500.44586 C108.161376,487.644076 118.575132,477.229299 131.375661,477.229299 C144.17619,477.229299 154.589947,487.644076 154.589947,500.44586 C154.589947,513.247643 144.17619,523.66242 131.375661,523.66242 L131.375661,523.66242 Z M131.375661,480.324841 C120.281984,480.324841 111.256614,489.351096 111.256614,500.44586 C111.256614,511.540624 120.281984,520.566879 131.375661,520.566879 C142.469339,520.566879 151.494709,511.540624 151.494709,500.44586 C151.494709,489.351096 142.469339,480.324841 131.375661,480.324841 L131.375661,480.324841 Z" id="Shape" fill="#CCCCCC" sketch:type="MSShapeGroup"></path>
+                          <ellipse id="Oval" fill="#CCCCCC" sketch:type="MSShapeGroup" cx="131.375661" cy="27.4096433" rx="4.81481481" ry="4.81528662"></ellipse>
+                          <path d="M152.698413,51.2484076 L110.05291,51.2484076 C108.343307,51.2484076 106.957672,49.8626369 106.957672,48.1528662 C106.957672,46.4430955 108.343307,45.0573248 110.05291,45.0573248 L152.698413,45.0573248 C154.408016,45.0573248 155.793651,46.4430955 155.793651,48.1528662 C155.793651,49.8626369 154.408016,51.2484076 152.698413,51.2484076 L152.698413,51.2484076 Z" id="Shape" fill="#CCCCCC" sketch:type="MSShapeGroup"></path>
+                          <rect id="Rectangle-path" fill="#CCCCCC" sketch:type="MSShapeGroup" x="175.396825" y="0" width="41.957672" height="2.75159236"></rect>
+                          <rect id="Rectangle-path" fill="#CCCCCC" sketch:type="MSShapeGroup" x="0" y="125.197452" width="2.75132275" height="18.9171975"></rect>
+                          <rect id="Rectangle-path" fill="#CCCCCC" sketch:type="MSShapeGroup" x="0" y="74.5224076" width="2.75132275" height="26.1401274"></rect>
+                          <rect id="Rectangle-path" fill="#CCCCCC" sketch:type="MSShapeGroup" x="0" y="168.191083" width="2.75132275" height="18.9171975"></rect>
+                      </g>
+                  </g>
+              </g>
+          </svg>
