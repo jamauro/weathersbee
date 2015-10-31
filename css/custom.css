@@ -144,6 +144,20 @@ p {
   animation-delay: 3.5s;
 }
 
+#smallphone .radar {
+  position: absolute;
+  width: 204px;
+  height: 361px;
+  top: 70px;
+  left: 19px;
+}
+
+.radar img {
+  width: 204px;
+  height: 361px;
+}
+
+
 @-webkit-keyframes slideLeft {
   from {
     -webkit-transform: translate3d(0, 0, 0);
